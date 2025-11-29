@@ -22,9 +22,15 @@ export const Loader: React.FC<LoaderProps> = ({ steps, onComplete, onStepComplet
 
     const targetText = steps[currentStepIndex];
     
+    // Calculate timing to ensure total duration is ~7 seconds
+    const TOTAL_DURATION = 7000;
+    const stepDuration = TOTAL_DURATION / steps.length;
+    const pauseDuration = stepDuration * 0.3; // 30% of time for pause
+    const typingTimeAvailable = stepDuration * 0.7; // 70% of time for typing
+    const charDelay = typingTimeAvailable / (targetText.length || 1);
+
     if (isPaused) {
       // Pause after line completion
-      const pauseDuration = 400 + Math.random() * 500; // 400-900ms
       timeoutRef.current = setTimeout(() => {
         setIsPaused(false);
         onStepComplete(targetText);
@@ -36,7 +42,6 @@ export const Loader: React.FC<LoaderProps> = ({ steps, onComplete, onStepComplet
 
     if (currentText.length < targetText.length) {
       // Typing effect
-      const charDelay = 25 + Math.random() * 15; // 25-40ms
       timeoutRef.current = setTimeout(() => {
         setCurrentText(targetText.slice(0, currentText.length + 1));
         if (Math.random() > 0.7) playBeep(800 + Math.random() * 200, 0.03); // Random blip

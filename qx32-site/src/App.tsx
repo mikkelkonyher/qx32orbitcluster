@@ -114,6 +114,13 @@ function App() {
           <div className="flex-1 p-8 flex flex-col items-center justify-center relative z-10">
             {status === 'IDLE' && (
               <div className="w-full max-w-md text-center animate-fade-in">
+                <div className="mb-6 text-center animate-pulse">
+                  <div className="text-yellow-400 text-xs font-bold mb-1">⚠️ Warning, Operator ⚠️</div>
+                  <div className="text-[10px] text-neon-dim/80 max-w-xs mx-auto leading-tight">
+                    <div>Each query consumes more energy than a small city.</div>
+                    <div className="mt-1">When engaging the QX32 ORBIT CLUSTER, there is a small chance the simulation you are currently in may experience glitches.</div>
+                  </div>
+                </div>
                 <div className="mb-8 text-neon-dim font-mono text-sm opacity-80">
                   AWAITING INPUT QUERY...
                 </div>
