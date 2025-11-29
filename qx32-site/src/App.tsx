@@ -205,7 +205,7 @@ function App() {
         {/* Footer Status Bar */}
         <div className="border-t border-neon-dim p-2 flex justify-between items-center text-[10px] md:text-xs font-mono text-neon-dim bg-neon/5">
           <div>MEM: 64TB // QUBITS: 4096 // TEMP: 2.4K</div>
-          <div className="animate-pulse">CONNECTED TO DEEP SPACE RELAY</div>
+          <div className="animate-pulse">QEC LOOP ACTIVE // ENTANGL. ERROR RATE &lt; 10⁻⁶</div>
         </div>
 
       </div>
