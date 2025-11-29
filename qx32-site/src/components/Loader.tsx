@@ -111,7 +111,7 @@ export const Loader: React.FC<LoaderProps> = ({ steps, willError, onComplete, on
         onStepComplete(targetText, stepStatus);
         setCurrentText('');
         setCurrentStepIndex(prev => prev + 1);
-      }, pauseDuration);
+      }, pauseDuration) as unknown as number;
       return;
     }
 
@@ -119,7 +119,7 @@ export const Loader: React.FC<LoaderProps> = ({ steps, willError, onComplete, on
       // Typing effect
       timeoutRef.current = setTimeout(() => {
         setCurrentText(targetText.slice(0, currentText.length + 1));
-      }, charDelay);
+      }, charDelay) as unknown as number;
     } else {
       // Line finished typing
       const stepStatus = failedStepsRef.current.has(currentStepIndex) ? 'FAIL' : 'OK';
