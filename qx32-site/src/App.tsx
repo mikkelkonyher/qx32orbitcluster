@@ -28,7 +28,20 @@ const ANTIGRAVITY_STEPS = [
   "Bypassing physics constraints",
   "Consulting the void",
   ...DEFAULT_STEPS.slice(10)
+
 ];
+
+const ERROR_MESSAGES = [
+  { code: "ALX-404-ZORG", message: "Neural tentacle not found" },
+  { code: "XEN0-9001", message: "Quantum consciousness overload" },
+  { code: "QNX-Δ13", message: "Probability field collapsed" },
+  { code: "ZN-314-BETA", message: "Alien mesh refuses to cooperate" },
+  { code: "ORP-Ξ42", message: "Dimensional rift in neural link" }
+];
+
+export type ResultType = 
+  | { type: 'SUCCESS'; answer: 'YES' | 'NO'; probability: number }
+  | { type: 'ERROR'; code: string; message: string };
 
 type AppStatus = 'IDLE' | 'PROCESSING' | 'REVEALED';
 
@@ -38,7 +51,7 @@ function App() {
   const [input, setInput] = useState('');
   const [status, setStatus] = useState<AppStatus>('IDLE');
   const [logs, setLogs] = useState<string[]>([]);
-  const [result, setResult] = useState<{ answer: 'YES' | 'NO', probability: number } | null>(null);
+  const [result, setResult] = useState<ResultType | null>(null);
   const [steps, setSteps] = useState(DEFAULT_STEPS);
   
   const inputRef = useRef<HTMLInputElement>(null);
@@ -71,13 +84,25 @@ function App() {
   };
 
   const handleComplete = () => {
+    // 25% chance of error
+    const isError = Math.random() < 0.25;
+
+    if (isError) {
+      const randomError = ERROR_MESSAGES[Math.floor(Math.random() * ERROR_MESSAGES.length)];
+      setTimeout(() => {
+        setResult({ type: 'ERROR', ...randomError });
+        setStatus('REVEALED');
+      }, 900);
+      return;
+    }
+
     // Deterministic result based on input
     const probability = hashStringToRange(input.trim().toLowerCase(), 0, 100);
     const answer = probability > 50 ? 'YES' : 'NO';
     
     // Add a small delay before reveal for dramatic effect
     setTimeout(() => {
-      setResult({ answer, probability });
+      setResult({ type: 'SUCCESS', answer, probability });
       setStatus('REVEALED');
     }, 900);
   };
@@ -157,8 +182,7 @@ function App() {
 
             {status === 'REVEALED' && result && (
               <ResultBadge 
-                result={result.answer} 
-                probability={result.probability} 
+                result={result} 
                 onRerun={handleRerun} 
               />
             )}
