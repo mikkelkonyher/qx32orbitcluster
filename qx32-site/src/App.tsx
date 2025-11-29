@@ -266,7 +266,7 @@ function App() {
         </div>
 
         {/* Footer Status Bar */}
-        <div className={`border-t border-neon-dim p-2 flex justify-between items-center text-[10px] md:text-xs font-mono text-neon-dim bg-neon/5 relative overflow-hidden ${
+        <div className={`border-t border-neon-dim p-2 flex flex-col max-[375px]:flex-col sm:flex-row sm:justify-between sm:items-center text-[9px] max-[375px]:text-[8px] md:text-xs font-mono text-neon-dim bg-neon/5 relative overflow-hidden gap-1 sm:gap-0 ${
           status === 'PROCESSING' ? 'glitch-text-corrupt' : ''
         }`}>
           {status === 'PROCESSING' && (

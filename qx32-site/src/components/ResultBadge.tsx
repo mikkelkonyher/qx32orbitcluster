@@ -18,26 +18,26 @@ export const ResultBadge: React.FC<ResultBadgeProps> = ({ result, onRerun }) => 
 
   return (
     <div className={`transition-all duration-1000 transform ${show ? 'scale-100 opacity-100' : 'scale-90 opacity-0'} flex flex-col items-center justify-center`}>
-      <div className="relative group">
+      <div className="relative group my-4 md:my-6">
         <div className={`absolute inset-0 ${isError ? 'bg-red-500' : 'bg-neon'} opacity-20 blur-xl group-hover:opacity-30 transition-opacity duration-500 rounded-lg`}></div>
-        <div className={`relative border-4 ${isError ? 'border-red-500 shadow-[0_0_30px_rgba(239,68,68,0.3)]' : 'border-neon shadow-[0_0_30px_rgba(0,255,136,0.3)]'} bg-bg p-4 md:p-8 lg:p-12 rounded-lg max-w-[95vw] md:max-w-none`}>
+        <div className={`relative border-4 ${isError ? 'border-red-500 shadow-[0_0_30px_rgba(239,68,68,0.3)]' : 'border-neon shadow-[0_0_30px_rgba(0,255,136,0.3)]'} bg-bg p-3 max-[375px]:p-2 md:p-8 lg:p-12 rounded-lg max-w-[95vw] md:max-w-none`}>
           <div className="scanline opacity-20"></div>
           
           {isError ? (
             <>
-              <h1 className="text-2xl md:text-4xl lg:text-6xl font-bold text-red-500 neon-glow-red tracking-widest mb-2 md:mb-4 text-center animate-glitch">
+              <h1 className="text-2xl max-[375px]:text-sm max-[375px]:tracking-wide max-[375px]:mb-1 md:text-4xl lg:text-6xl font-bold text-red-500 neon-glow-red tracking-widest mb-2 md:mb-4 text-center animate-glitch">
                 ERROR
               </h1>
-              <div className="text-center font-mono text-red-400 text-xs md:text-sm lg:text-base pt-2 md:pt-4 mt-1 md:mt-2 leading-tight md:leading-normal">
+              <div className="text-center font-mono text-red-400 text-xs max-[375px]:text-[9px] max-[375px]:pt-1 md:text-sm lg:text-base pt-2 md:pt-4 mt-1 md:mt-2 leading-tight md:leading-normal">
                 {result.code}: {result.message}
               </div>
-              <div className="text-center font-mono text-red-400 text-xs md:text-sm lg:text-base mt-2 md:mt-4 pt-2 md:pt-4 border-t border-red-500/30 leading-tight md:leading-normal px-2">
+              <div className="text-center font-mono text-red-400 text-xs max-[375px]:text-[9px] max-[375px]:mt-1 max-[375px]:pt-1 md:text-sm lg:text-base mt-2 md:mt-4 pt-2 md:pt-4 border-t border-red-500/30 leading-tight md:leading-normal px-2">
                 We sometimes experience errors when multiple planets use qx32 at the same time. Please try again.
               </div>
             </>
           ) : (
             <>
-              <h1 className="text-6xl md:text-9xl font-bold text-neon neon-glow tracking-widest mb-4 text-center">
+              <h1 className="text-4xl max-[375px]:text-base max-[375px]:tracking-wide sm:text-6xl md:text-9xl font-bold text-neon neon-glow tracking-widest mb-4 text-center">
                 {result.answer}
               </h1>
               <div className="text-center font-mono text-neon-dim text-sm md:text-base tracking-widest uppercase border-t border-neon-dim pt-4 mt-2">
@@ -51,7 +51,7 @@ export const ResultBadge: React.FC<ResultBadgeProps> = ({ result, onRerun }) => 
       
       <button 
         onClick={onRerun}
-        className={`mt-12 px-6 py-2 border ${isError ? 'border-red-500/50 text-red-400 hover:bg-red-500' : 'border-neon-dim text-neon-dim hover:bg-neon'} hover:text-bg transition-colors duration-300 font-mono text-sm uppercase tracking-wider opacity-60 hover:opacity-100`}
+        className={`mt-8 mb-4 md:mt-12 md:mb-6 px-6 py-2 border ${isError ? 'border-red-500/50 text-red-400 hover:bg-red-500' : 'border-neon-dim text-neon-dim hover:bg-neon'} hover:text-bg transition-colors duration-300 font-mono text-sm uppercase tracking-wider opacity-60 hover:opacity-100`}
       >
         Rerun Protocol
       </button>
