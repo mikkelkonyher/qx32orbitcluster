@@ -142,13 +142,9 @@ function App() {
       )}
       
       {/* Main Console Container */}
-      <div className={`w-full max-w-4xl flex flex-col border border-neon-dim bg-bg/90 relative rounded-sm shadow-[0_0_20px_rgba(0,255,136,0.1)] overflow-hidden z-10 transition-all duration-300 ${
+      <div className={`w-full max-w-4xl flex flex-col border border-neon-dim bg-bg/90 relative rounded-sm shadow-[0_0_20px_rgba(0,255,136,0.1)] overflow-hidden z-10 transition-all duration-300 flex-1 md:flex-none md:h-[80vh] ${
         status === 'PROCESSING' ? 'glitch-shake' : ''
-      }`}
-      style={{
-        height: 'calc(100dvh - 1rem)', // Fallback and mobile
-        maxHeight: '80vh' // Desktop constraint
-      }}>
+      }`}>
         
         {/* Header */}
         <div className="border-b border-neon-dim p-3 md:p-4 flex justify-between items-center bg-neon/5 relative overflow-hidden shrink-0">

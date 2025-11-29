@@ -2,7 +2,7 @@ import React from 'react';
 
 export const Footer: React.FC = () => {
   return (
-    <div className="absolute bottom-4 w-full flex flex-col items-center justify-center gap-2 text-neon-dim/60 font-mono text-[9px] max-[375px]:text-[8px] md:text-xs z-40 pointer-events-auto px-2">
+    <div className="relative mt-2 md:mt-0 md:absolute md:bottom-4 w-full flex flex-col items-center justify-center gap-2 text-neon-dim/60 font-mono text-[9px] max-[375px]:text-[8px] md:text-xs z-40 pointer-events-auto px-2">
       <div className="flex items-center gap-2 text-center">
         <span className="max-[375px]:text-[7px]">Created by Mikkel Hesseldahl Konyher all rights reserved</span>
       </div>
