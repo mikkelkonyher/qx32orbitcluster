@@ -133,7 +133,7 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4 relative">
+    <div className="min-h-[100dvh] flex flex-col items-center justify-center p-2 md:p-4 relative supports-[min-height:100dvh]:min-h-[100dvh]">
       <div className="crt-overlay fixed inset-0 z-50 pointer-events-none"></div>
       
       {/* Glitch Flash Overlay - Only during processing */}
@@ -142,22 +142,26 @@ function App() {
       )}
       
       {/* Main Console Container */}
-      <div className={`w-full max-w-4xl h-[80vh] flex flex-col border border-neon-dim bg-bg/90 relative rounded-sm shadow-[0_0_20px_rgba(0,255,136,0.1)] overflow-hidden z-10 transition-all duration-300 ${
+      <div className={`w-full max-w-4xl flex flex-col border border-neon-dim bg-bg/90 relative rounded-sm shadow-[0_0_20px_rgba(0,255,136,0.1)] overflow-hidden z-10 transition-all duration-300 ${
         status === 'PROCESSING' ? 'glitch-shake' : ''
-      }`}>
+      }`}
+      style={{
+        height: 'calc(100dvh - 1rem)', // Fallback and mobile
+        maxHeight: '80vh' // Desktop constraint
+      }}>
         
         {/* Header */}
-        <div className="border-b border-neon-dim p-4 flex justify-between items-center bg-neon/5 relative overflow-hidden">
+        <div className="border-b border-neon-dim p-3 md:p-4 flex justify-between items-center bg-neon/5 relative overflow-hidden shrink-0">
           {status === 'PROCESSING' && (
             <div className="absolute inset-0 glitch-distort bg-neon/5 pointer-events-none"></div>
           )}
-          <div className={`text-neon font-bold tracking-widest text-xl flex items-center gap-2 relative z-10 ${
+          <div className={`text-neon font-bold tracking-widest text-lg md:text-xl flex items-center gap-2 relative z-10 ${
             status === 'PROCESSING' ? 'glitch-color' : ''
           }`}>
-            <div className="w-3 h-3 bg-neon rounded-full animate-pulse"></div>
+            <div className="w-2 h-2 md:w-3 md:h-3 bg-neon rounded-full animate-pulse"></div>
             QX32 ORBIT CLUSTER
           </div>
-          <div className="text-xs font-mono text-neon-dim opacity-70 relative z-10">
+          <div className="text-[10px] md:text-xs font-mono text-neon-dim opacity-70 relative z-10">
             SYS.VER.9.2.1 // ONLINE
           </div>
         </div>
@@ -166,17 +170,17 @@ function App() {
         <div className="flex-1 flex flex-col md:flex-row overflow-hidden relative">
           
           {/* Left/Top: Main Display */}
-          <div className="flex-1 p-8 flex flex-col items-center justify-center relative z-10 overflow-hidden">
+          <div className="flex-1 p-4 md:p-8 flex flex-col items-center justify-center relative z-10 overflow-y-auto md:overflow-hidden scrollbar-hide">
             {status === 'IDLE' && (
-              <div className="w-full max-w-md text-center animate-fade-in">
-                <div className="mb-6 text-center animate-pulse">
+              <div className="w-full max-w-md text-center animate-fade-in my-auto">
+                <div className="mb-4 md:mb-6 text-center animate-pulse">
                   <div className="text-yellow-400 text-xs font-bold mb-1">⚠️ Warning, Operator ⚠️</div>
                   <div className="text-[10px] text-neon-dim/80 max-w-xs mx-auto leading-tight">
                     <div>Each query consumes more energy than a small city.</div>
                     <div className="mt-1">When engaging the QX32 ORBIT CLUSTER, there is a small chance the simulation you are currently in may experience glitches.</div>
                   </div>
                 </div>
-                <div className="mb-8 text-neon-dim font-mono text-sm opacity-80">
+                <div className="mb-6 md:mb-8 text-neon-dim font-mono text-xs md:text-sm opacity-80">
                   AWAITING INPUT QUERY...
                 </div>
                 {errorMessage && (
@@ -203,7 +207,7 @@ function App() {
                       }
                     }}
                     placeholder="ask qx32 anything..."
-                    className="w-full bg-transparent py-3 text-center text-xl md:text-2xl text-neon font-mono focus:outline-none placeholder-neon-dim/30 transition-all resize-none overflow-hidden"
+                    className="w-full bg-transparent py-3 text-center text-lg md:text-2xl text-neon font-mono focus:outline-none placeholder-neon-dim/30 transition-all resize-none overflow-hidden"
                     autoComplete="off"
                     rows={1}
                     style={{
@@ -220,7 +224,7 @@ function App() {
                 </form>
                 <button 
                   onClick={() => handleAsk()}
-                  className="mt-8 px-8 py-3 bg-neon/10 border border-neon text-neon hover:bg-neon hover:text-bg transition-all duration-300 font-mono tracking-wider uppercase text-sm"
+                  className="mt-6 md:mt-8 px-6 md:px-8 py-3 bg-neon/10 border border-neon text-neon hover:bg-neon hover:text-bg transition-all duration-300 font-mono tracking-wider uppercase text-xs md:text-sm active:bg-neon/20 touch-manipulation"
                 >
                   Ask The Cluster
                 </button>
@@ -232,7 +236,7 @@ function App() {
                 <div className="absolute inset-0 glitch-distort pointer-events-none opacity-30"></div>
                 <div className="absolute top-0 left-0 w-full h-1 bg-neon glitch-flash opacity-50"></div>
                 <div className="absolute bottom-0 left-0 w-full h-1 bg-neon glitch-flash opacity-50" style={{ animationDelay: '0.1s' }}></div>
-                <div className="w-full max-w-lg relative z-10">
+                <div className="w-full max-w-lg relative z-10 my-auto">
                   <Loader 
                     steps={steps} 
                     willError={willError}
@@ -244,20 +248,22 @@ function App() {
             )}
 
             {status === 'REVEALED' && result && (
-              <ResultBadge 
-                result={result} 
-                onRerun={handleRerun} 
-              />
+              <div className="my-auto w-full flex justify-center">
+                <ResultBadge 
+                  result={result} 
+                  onRerun={handleRerun} 
+                />
+              </div>
             )}
           </div>
 
           {/* Right/Bottom: Telemetry Log (Sidebar on desktop, hidden/small on mobile) */}
           <div className={`
             border-t md:border-t-0 md:border-l border-neon-dim bg-black/20 
-            flex flex-col transition-all duration-500
-            ${status === 'IDLE' ? 'h-0 md:w-0 opacity-0' : 'h-48 md:h-auto md:w-80 opacity-100 p-4'}
+            flex flex-col transition-all duration-500 shrink-0
+            ${status === 'IDLE' ? 'h-0 md:w-0 opacity-0' : 'h-32 md:h-auto md:w-80 opacity-100 p-3 md:p-4'}
           `}>
-            <div className="text-xs font-mono text-neon-dim mb-2 uppercase tracking-wider border-b border-neon-dim/30 pb-1">
+            <div className="text-[10px] md:text-xs font-mono text-neon-dim mb-2 uppercase tracking-wider border-b border-neon-dim/30 pb-1">
               System Telemetry
             </div>
             <ConsoleLog logs={logs} />
@@ -266,7 +272,7 @@ function App() {
         </div>
 
         {/* Footer Status Bar */}
-        <div className={`border-t border-neon-dim p-2 flex flex-col max-[375px]:flex-col sm:flex-row sm:justify-between sm:items-center text-[9px] max-[375px]:text-[8px] md:text-xs font-mono text-neon-dim bg-neon/5 relative overflow-hidden gap-1 sm:gap-0 ${
+        <div className={`border-t border-neon-dim p-2 flex flex-col max-[375px]:flex-col sm:flex-row sm:justify-between sm:items-center text-[9px] max-[375px]:text-[8px] md:text-xs font-mono text-neon-dim bg-neon/5 relative overflow-hidden gap-1 sm:gap-0 shrink-0 ${
           status === 'PROCESSING' ? 'glitch-text-corrupt' : ''
         }`}>
           {status === 'PROCESSING' && (
