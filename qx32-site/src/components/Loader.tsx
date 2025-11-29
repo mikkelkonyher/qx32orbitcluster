@@ -11,8 +11,11 @@ export const Loader: React.FC<LoaderProps> = ({ steps, onComplete, onStepComplet
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [currentText, setCurrentText] = useState('');
   const [isPaused, setIsPaused] = useState(false);
+  const [glitchActive, setGlitchActive] = useState(false);
+  const [glitchText, setGlitchText] = useState('');
   
   const timeoutRef = useRef<number | null>(null);
+  const glitchTimeoutRef = useRef<number | null>(null);
 
   // Play sound when loader starts
   useEffect(() => {
@@ -20,8 +23,51 @@ export const Loader: React.FC<LoaderProps> = ({ steps, onComplete, onStepComplet
     
     return () => {
       stopLoadingSound();
+      if (glitchTimeoutRef.current) clearTimeout(glitchTimeoutRef.current);
     };
   }, []);
+
+  // Random glitch effects
+  useEffect(() => {
+    if (!currentText) return;
+
+    // Random chance of glitch (30% chance every 200-800ms)
+    const scheduleGlitch = () => {
+      const delay = Math.random() * 600 + 200;
+      glitchTimeoutRef.current = setTimeout(() => {
+        if (Math.random() < 0.3 && currentText.length > 0) {
+          setGlitchActive(true);
+          // Corrupt some characters
+          const corrupted = currentText
+            .split('')
+            .map((char, i) => {
+              if (Math.random() < 0.15 && char !== ' ') {
+                const glitchChars = ['█', '▓', '▒', '░', '▄', '▀', '■', '□'];
+                return glitchChars[Math.floor(Math.random() * glitchChars.length)];
+              }
+              return char;
+            })
+            .join('');
+          setGlitchText(corrupted);
+          
+          // Remove glitch after short time
+          setTimeout(() => {
+            setGlitchActive(false);
+            setGlitchText('');
+            scheduleGlitch();
+          }, 50 + Math.random() * 100);
+        } else {
+          scheduleGlitch();
+        }
+      }, delay) as unknown as number;
+    };
+
+    scheduleGlitch();
+
+    return () => {
+      if (glitchTimeoutRef.current) clearTimeout(glitchTimeoutRef.current);
+    };
+  }, [currentText]);
 
   useEffect(() => {
     if (currentStepIndex >= steps.length) {
@@ -65,11 +111,17 @@ export const Loader: React.FC<LoaderProps> = ({ steps, onComplete, onStepComplet
   }, [currentText, currentStepIndex, isPaused, steps, onComplete, onStepComplete]);
 
   return (
-    <div className="font-mono text-neon text-lg md:text-xl relative">
+    <div className="font-mono text-neon text-lg md:text-xl relative glitch-text-corrupt">
       <span className="mr-2">
         {currentStepIndex < steps.length ? '>' : ''}
       </span>
-      {currentText}
+      <span className="relative">
+        {glitchActive ? (
+          <span className="text-red-400 opacity-80">{glitchText}</span>
+        ) : (
+          currentText
+        )}
+      </span>
       <span className="typewriter-cursor ml-1"></span>
       {isPaused && (
         <span className="ml-4 text-sm text-neon-dim animate-pulse">

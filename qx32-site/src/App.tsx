@@ -115,16 +115,28 @@ function App() {
     <div className="min-h-screen flex flex-col items-center justify-center p-4 relative">
       <div className="crt-overlay fixed inset-0 z-50 pointer-events-none"></div>
       
+      {/* Glitch Flash Overlay - Only during processing */}
+      {status === 'PROCESSING' && (
+        <div className="fixed inset-0 z-40 pointer-events-none glitch-flash bg-neon/10"></div>
+      )}
+      
       {/* Main Console Container */}
-      <div className="w-full max-w-4xl h-[80vh] flex flex-col border border-neon-dim bg-bg/90 relative rounded-sm shadow-[0_0_20px_rgba(0,255,136,0.1)] overflow-hidden z-10">
+      <div className={`w-full max-w-4xl h-[80vh] flex flex-col border border-neon-dim bg-bg/90 relative rounded-sm shadow-[0_0_20px_rgba(0,255,136,0.1)] overflow-hidden z-10 transition-all duration-300 ${
+        status === 'PROCESSING' ? 'glitch-shake' : ''
+      }`}>
         
         {/* Header */}
-        <div className="border-b border-neon-dim p-4 flex justify-between items-center bg-neon/5">
-          <div className="text-neon font-bold tracking-widest text-xl flex items-center gap-2">
+        <div className="border-b border-neon-dim p-4 flex justify-between items-center bg-neon/5 relative overflow-hidden">
+          {status === 'PROCESSING' && (
+            <div className="absolute inset-0 glitch-distort bg-neon/5 pointer-events-none"></div>
+          )}
+          <div className={`text-neon font-bold tracking-widest text-xl flex items-center gap-2 relative z-10 ${
+            status === 'PROCESSING' ? 'glitch-color' : ''
+          }`}>
             <div className="w-3 h-3 bg-neon rounded-full animate-pulse"></div>
             QX32 ORBIT CLUSTER
           </div>
-          <div className="text-xs font-mono text-neon-dim opacity-70">
+          <div className="text-xs font-mono text-neon-dim opacity-70 relative z-10">
             SYS.VER.9.2.1 // ONLINE
           </div>
         </div>
@@ -133,7 +145,7 @@ function App() {
         <div className="flex-1 flex flex-col md:flex-row overflow-hidden relative">
           
           {/* Left/Top: Main Display */}
-          <div className="flex-1 p-8 flex flex-col items-center justify-center relative z-10">
+          <div className="flex-1 p-8 flex flex-col items-center justify-center relative z-10 overflow-hidden">
             {status === 'IDLE' && (
               <div className="w-full max-w-md text-center animate-fade-in">
                 <div className="mb-6 text-center animate-pulse">
@@ -183,13 +195,18 @@ function App() {
             )}
 
             {status === 'PROCESSING' && (
-              <div className="w-full max-w-lg">
-                <Loader 
-                  steps={steps} 
-                  onStepComplete={handleStepComplete} 
-                  onComplete={handleComplete} 
-                />
-              </div>
+              <>
+                <div className="absolute inset-0 glitch-distort pointer-events-none opacity-30"></div>
+                <div className="absolute top-0 left-0 w-full h-1 bg-neon glitch-flash opacity-50"></div>
+                <div className="absolute bottom-0 left-0 w-full h-1 bg-neon glitch-flash opacity-50" style={{ animationDelay: '0.1s' }}></div>
+                <div className="w-full max-w-lg relative z-10">
+                  <Loader 
+                    steps={steps} 
+                    onStepComplete={handleStepComplete} 
+                    onComplete={handleComplete} 
+                  />
+                </div>
+              </>
             )}
 
             {status === 'REVEALED' && result && (
@@ -215,9 +232,16 @@ function App() {
         </div>
 
         {/* Footer Status Bar */}
-        <div className="border-t border-neon-dim p-2 flex justify-between items-center text-[10px] md:text-xs font-mono text-neon-dim bg-neon/5">
-          <div>MEM: 64TB // QUBITS: 4096 // TEMP: 2.4K</div>
-          <div className="animate-pulse">QEC LOOP ACTIVE // ENTANGL. ERROR RATE &lt; 10⁻⁶</div>
+        <div className={`border-t border-neon-dim p-2 flex justify-between items-center text-[10px] md:text-xs font-mono text-neon-dim bg-neon/5 relative overflow-hidden ${
+          status === 'PROCESSING' ? 'glitch-text-corrupt' : ''
+        }`}>
+          {status === 'PROCESSING' && (
+            <div className="absolute inset-0 glitch-distort bg-neon/5 pointer-events-none"></div>
+          )}
+          <div className="relative z-10">MEM: 64TB // QUBITS: 4096 // TEMP: 2.4K</div>
+          <div className={`relative z-10 ${status === 'PROCESSING' ? 'glitch-color animate-pulse' : 'animate-pulse'}`}>
+            QEC LOOP ACTIVE // ENTANGL. ERROR RATE &lt; 10⁻⁶
+          </div>
         </div>
 
       </div>
