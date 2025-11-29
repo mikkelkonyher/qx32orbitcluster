@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { playBeep } from '../utils/sound';
+import { playLoadingSound, stopLoadingSound } from '../utils/sound';
 
 interface LoaderProps {
   steps: string[];
@@ -12,7 +12,16 @@ export const Loader: React.FC<LoaderProps> = ({ steps, onComplete, onStepComplet
   const [currentText, setCurrentText] = useState('');
   const [isPaused, setIsPaused] = useState(false);
   
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const timeoutRef = useRef<number | null>(null);
+
+  // Play sound when loader starts
+  useEffect(() => {
+    playLoadingSound();
+    
+    return () => {
+      stopLoadingSound();
+    };
+  }, []);
 
   useEffect(() => {
     if (currentStepIndex >= steps.length) {
@@ -44,11 +53,9 @@ export const Loader: React.FC<LoaderProps> = ({ steps, onComplete, onStepComplet
       // Typing effect
       timeoutRef.current = setTimeout(() => {
         setCurrentText(targetText.slice(0, currentText.length + 1));
-        if (Math.random() > 0.7) playBeep(800 + Math.random() * 200, 0.03); // Random blip
       }, charDelay);
     } else {
       // Line finished typing
-      playBeep(600, 0.1, 'sine'); // Line complete tone
       setIsPaused(true);
     }
 

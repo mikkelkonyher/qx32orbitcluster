@@ -8,16 +8,13 @@ const DEFAULT_STEPS = [
   "Initializing qx32 orbit cluster",
   "Calibrating qubit lattice",
   "Aligning orbital compute channels",
-  "Spinning up thermal core",
+  "Heating up quantum reactor core",
   "Routing proton stream",
   "Synchronizing anomaly buffer",
-  "Contacting deep space relay",
   "Parsing classified data archive",
-  "Borrowing power from nearby star",
-  "Negotiating with alien neural mesh",
-  "Checking NASA firewall integrity",
+  "Linking to extraterrestrial neural lattice",
+  "Hacking NASA secure grid",
   "Expanding quantum probability field",
-  "Compressing uncertainty states",
   "Finalizing decision protocol"
 ];
 

@@ -1,20 +1,37 @@
-export const playBeep = (freq = 800, duration = 0.05, type: OscillatorType = 'square') => {
-  const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
-  if (!AudioContext) return;
+import loadingSoundFile from '../assets/audio/LoadingSound.mp3';
 
-  const ctx = new AudioContext();
-  const osc = ctx.createOscillator();
-  const gain = ctx.createGain();
+let audioInstance: HTMLAudioElement | null = null;
 
-  osc.type = type;
-  osc.frequency.setValueAtTime(freq, ctx.currentTime);
+export const playLoadingSound = () => {
+  console.log('playLoadingSound called');
+  console.log('Audio file path:', loadingSoundFile);
   
-  gain.gain.setValueAtTime(0.05, ctx.currentTime);
-  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+  // Stop any currently playing audio
+  if (audioInstance) {
+    audioInstance.pause();
+    audioInstance.currentTime = 0;
+  }
 
-  osc.connect(gain);
-  gain.connect(ctx.destination);
+  // Create and play new audio instance
+  audioInstance = new Audio(loadingSoundFile);
+  audioInstance.volume = 0.3; // Adjust volume as needed
+  
+  console.log('Audio instance created, attempting to play...');
+  
+  audioInstance.play()
+    .then(() => {
+      console.log('Audio playback started successfully');
+    })
+    .catch(err => {
+      console.error('Audio playback failed:', err);
+    });
+};
 
-  osc.start();
-  osc.stop(ctx.currentTime + duration);
+export const stopLoadingSound = () => {
+  console.log('stopLoadingSound called');
+  if (audioInstance) {
+    audioInstance.pause();
+    audioInstance.currentTime = 0;
+    audioInstance = null;
+  }
 };
