@@ -54,7 +54,7 @@ function App() {
   const [result, setResult] = useState<ResultType | null>(null);
   const [steps, setSteps] = useState(DEFAULT_STEPS);
   
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     if (status === 'IDLE') {
@@ -150,16 +150,31 @@ function App() {
                   AWAITING INPUT QUERY...
                 </div>
                 <form onSubmit={handleAsk} className="relative group">
-                  <input
+                  <textarea
                     ref={inputRef}
-                    type="text"
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        handleAsk();
+                      }
+                    }}
                     placeholder="ask qx32 anything..."
-                    className="w-full bg-transparent border-b-2 border-neon-dim py-3 text-center text-xl md:text-2xl text-neon font-mono focus:outline-none focus:border-neon placeholder-neon-dim/30 transition-all"
+                    className="w-full bg-transparent py-3 text-center text-xl md:text-2xl text-neon font-mono focus:outline-none placeholder-neon-dim/30 transition-all resize-none overflow-hidden"
                     autoComplete="off"
+                    rows={1}
+                    style={{
+                      minHeight: '3rem',
+                      maxHeight: '12rem'
+                    }}
+                    onInput={(e) => {
+                      const target = e.target as HTMLTextAreaElement;
+                      target.style.height = 'auto';
+                      target.style.height = Math.min(target.scrollHeight, 192) + 'px';
+                    }}
                   />
-                  <div className="absolute bottom-0 left-0 w-full h-0.5 bg-neon scale-x-0 group-focus-within:scale-x-100 transition-transform duration-500"></div>
+                  <div className="absolute bottom-0 left-0 w-full h-0.5 bg-neon-dim group-focus-within:bg-neon transition-colors duration-500"></div>
                 </form>
                 <button 
                   onClick={() => handleAsk()}
