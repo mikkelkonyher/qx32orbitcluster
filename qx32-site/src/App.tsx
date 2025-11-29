@@ -88,8 +88,8 @@ function App() {
     setLogs([]);
     setResult(null);
     
-    // Determine if there will be an error (25% chance)
-    const isError = Math.random() < 0.25;
+    // Determine if there will be an error (15% chance)
+    const isError = Math.random() < 0.15;
     setWillError(isError);
     
     // Easter egg check
