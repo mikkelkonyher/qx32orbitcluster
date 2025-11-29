@@ -32,6 +32,8 @@ const ANTIGRAVITY_STEPS = [
 
 type AppStatus = 'IDLE' | 'PROCESSING' | 'REVEALED';
 
+import { Footer } from './components/Footer';
+
 function App() {
   const [input, setInput] = useState('');
   const [status, setStatus] = useState<AppStatus>('IDLE');
@@ -92,7 +94,7 @@ function App() {
       <div className="crt-overlay fixed inset-0 z-50 pointer-events-none"></div>
       
       {/* Main Console Container */}
-      <div className="w-full max-w-4xl h-[80vh] flex flex-col border border-neon-dim bg-bg/90 relative rounded-sm shadow-[0_0_20px_rgba(0,255,136,0.1)] overflow-hidden">
+      <div className="w-full max-w-4xl h-[80vh] flex flex-col border border-neon-dim bg-bg/90 relative rounded-sm shadow-[0_0_20px_rgba(0,255,136,0.1)] overflow-hidden z-10">
         
         {/* Header */}
         <div className="border-b border-neon-dim p-4 flex justify-between items-center bg-neon/5">
@@ -176,6 +178,8 @@ function App() {
         </div>
 
       </div>
+      
+      <Footer />
     </div>
   );
 }
