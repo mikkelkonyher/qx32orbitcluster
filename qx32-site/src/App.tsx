@@ -43,15 +43,21 @@ export type ResultType =
 
 type AppStatus = 'IDLE' | 'PROCESSING' | 'REVEALED';
 
+export type LogEntry = {
+  step: string;
+  status: 'OK' | 'FAIL';
+};
+
 import { Footer } from './components/Footer';
 
 function App() {
   const [input, setInput] = useState('');
   const [status, setStatus] = useState<AppStatus>('IDLE');
-  const [logs, setLogs] = useState<string[]>([]);
+  const [logs, setLogs] = useState<LogEntry[]>([]);
   const [result, setResult] = useState<ResultType | null>(null);
   const [steps, setSteps] = useState(DEFAULT_STEPS);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [willError, setWillError] = useState(false);
   
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -82,25 +88,23 @@ function App() {
     setLogs([]);
     setResult(null);
     
+    // Determine if there will be an error (25% chance)
+    const isError = Math.random() < 0.25;
+    setWillError(isError);
+    
     // Easter egg check
-    if (trimmedInput.toLowerCase().includes('antigravity')) {
-      setSteps(ANTIGRAVITY_STEPS);
-    } else {
-      setSteps(DEFAULT_STEPS);
-    }
+    const currentSteps = trimmedInput.toLowerCase().includes('antigravity') ? ANTIGRAVITY_STEPS : DEFAULT_STEPS;
+    setSteps(currentSteps);
 
     setStatus('PROCESSING');
   };
 
-  const handleStepComplete = (step: string) => {
-    setLogs(prev => [...prev, step]);
+  const handleStepComplete = (step: string, stepStatus: 'OK' | 'FAIL') => {
+    setLogs(prev => [...prev, { step, status: stepStatus }]);
   };
 
   const handleComplete = () => {
-    // 25% chance of error
-    const isError = Math.random() < 0.25;
-
-    if (isError) {
+    if (willError) {
       const randomError = ERROR_MESSAGES[Math.floor(Math.random() * ERROR_MESSAGES.length)];
       setTimeout(() => {
         setResult({ type: 'ERROR', ...randomError });
@@ -231,6 +235,7 @@ function App() {
                 <div className="w-full max-w-lg relative z-10">
                   <Loader 
                     steps={steps} 
+                    willError={willError}
                     onStepComplete={handleStepComplete} 
                     onComplete={handleComplete} 
                   />

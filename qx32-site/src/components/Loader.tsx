@@ -3,19 +3,38 @@ import { playLoadingSound, stopLoadingSound } from '../utils/sound';
 
 interface LoaderProps {
   steps: string[];
+  willError: boolean;
   onComplete: () => void;
-  onStepComplete: (step: string) => void;
+  onStepComplete: (step: string, status: 'OK' | 'FAIL') => void;
 }
 
-export const Loader: React.FC<LoaderProps> = ({ steps, onComplete, onStepComplete }) => {
+export const Loader: React.FC<LoaderProps> = ({ steps, willError, onComplete, onStepComplete }) => {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [currentText, setCurrentText] = useState('');
   const [isPaused, setIsPaused] = useState(false);
+  const [currentStepStatus, setCurrentStepStatus] = useState<'OK' | 'FAIL'>('OK');
   const [glitchActive, setGlitchActive] = useState(false);
   const [glitchText, setGlitchText] = useState('');
   
   const timeoutRef = useRef<number | null>(null);
   const glitchTimeoutRef = useRef<number | null>(null);
+  const failedStepsRef = useRef<Set<number>>(new Set());
+
+  // Determine which steps should fail when error occurs
+  useEffect(() => {
+    if (willError && steps.length > 0) {
+      const numFailures = Math.min(Math.floor(steps.length * 0.3), Math.max(2, Math.floor(steps.length / 3)));
+      const failed = new Set<number>();
+      
+      // Randomly select steps to fail (avoid first and last steps)
+      while (failed.size < numFailures) {
+        const index = Math.floor(Math.random() * (steps.length - 2)) + 1; // Skip first (0) and last
+        failed.add(index);
+      }
+      
+      failedStepsRef.current = failed;
+    }
+  }, [willError, steps]);
 
   // Play sound when loader starts
   useEffect(() => {
@@ -86,9 +105,10 @@ export const Loader: React.FC<LoaderProps> = ({ steps, onComplete, onStepComplet
 
     if (isPaused) {
       // Pause after line completion
+      const stepStatus = failedStepsRef.current.has(currentStepIndex) ? 'FAIL' : 'OK';
       timeoutRef.current = setTimeout(() => {
         setIsPaused(false);
-        onStepComplete(targetText);
+        onStepComplete(targetText, stepStatus);
         setCurrentText('');
         setCurrentStepIndex(prev => prev + 1);
       }, pauseDuration);
@@ -102,6 +122,8 @@ export const Loader: React.FC<LoaderProps> = ({ steps, onComplete, onStepComplet
       }, charDelay);
     } else {
       // Line finished typing
+      const stepStatus = failedStepsRef.current.has(currentStepIndex) ? 'FAIL' : 'OK';
+      setCurrentStepStatus(stepStatus);
       setIsPaused(true);
     }
 
@@ -124,8 +146,12 @@ export const Loader: React.FC<LoaderProps> = ({ steps, onComplete, onStepComplet
       </span>
       <span className="typewriter-cursor ml-1"></span>
       {isPaused && (
-        <span className="ml-4 text-sm text-neon-dim animate-pulse">
-           [OK]
+        <span className={`ml-4 text-sm animate-pulse ${
+          currentStepStatus === 'FAIL' 
+            ? 'text-red-400' 
+            : 'text-neon-dim'
+        }`}>
+          [{currentStepStatus}]
         </span>
       )}
     </div>

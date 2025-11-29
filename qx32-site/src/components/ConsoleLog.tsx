@@ -1,7 +1,8 @@
 import React, { useEffect, useRef } from 'react';
+import { LogEntry } from '../App';
 
 interface ConsoleLogProps {
-  logs: string[];
+  logs: LogEntry[];
 }
 
 export const ConsoleLog: React.FC<ConsoleLogProps> = ({ logs }) => {
@@ -20,10 +21,10 @@ export const ConsoleLog: React.FC<ConsoleLogProps> = ({ logs }) => {
             .{Math.floor(Math.random() * 999).toString().padStart(3, '0')}
           </span>
           <span className="text-neon-dim">
-            {log}
+            {log.step}
           </span>
-          <span className="float-right text-xs opacity-50">
-            [OK]
+          <span className={`float-right text-xs opacity-50 ${log.status === 'FAIL' ? 'text-red-400' : ''}`}>
+            [{log.status}]
           </span>
         </div>
       ))}
