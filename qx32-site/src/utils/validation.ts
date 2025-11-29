@@ -9,6 +9,7 @@ const YES_NO_STARTERS = {
     "will",
     "should",
     "did",
+    "am",
     "has",
     "have",
     "was",
