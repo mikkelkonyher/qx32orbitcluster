@@ -20,16 +20,19 @@ export const ResultBadge: React.FC<ResultBadgeProps> = ({ result, onRerun }) => 
     <div className={`transition-all duration-1000 transform ${show ? 'scale-100 opacity-100' : 'scale-90 opacity-0'} flex flex-col items-center justify-center`}>
       <div className="relative group">
         <div className={`absolute inset-0 ${isError ? 'bg-red-500' : 'bg-neon'} opacity-20 blur-xl group-hover:opacity-30 transition-opacity duration-500 rounded-lg`}></div>
-        <div className={`relative border-4 ${isError ? 'border-red-500 shadow-[0_0_30px_rgba(239,68,68,0.3)]' : 'border-neon shadow-[0_0_30px_rgba(0,255,136,0.3)]'} bg-bg p-8 md:p-12 rounded-lg`}>
+        <div className={`relative border-4 ${isError ? 'border-red-500 shadow-[0_0_30px_rgba(239,68,68,0.3)]' : 'border-neon shadow-[0_0_30px_rgba(0,255,136,0.3)]'} bg-bg p-4 md:p-8 lg:p-12 rounded-lg max-w-[95vw] md:max-w-none`}>
           <div className="scanline opacity-20"></div>
           
           {isError ? (
             <>
-              <h1 className="text-4xl md:text-6xl font-bold text-red-500 neon-glow-red tracking-widest mb-4 text-center animate-glitch">
-                {result.code}
+              <h1 className="text-2xl md:text-4xl lg:text-6xl font-bold text-red-500 neon-glow-red tracking-widest mb-2 md:mb-4 text-center animate-glitch">
+                ERROR
               </h1>
-              <div className="text-center font-mono text-red-400 text-sm md:text-base tracking-widest uppercase border-t border-red-500/50 pt-4 mt-2">
-                {result.message}
+              <div className="text-center font-mono text-red-400 text-xs md:text-sm lg:text-base pt-2 md:pt-4 mt-1 md:mt-2 leading-tight md:leading-normal">
+                {result.code}: {result.message}
+              </div>
+              <div className="text-center font-mono text-red-400 text-xs md:text-sm lg:text-base mt-2 md:mt-4 pt-2 md:pt-4 border-t border-red-500/30 leading-tight md:leading-normal px-2">
+                We sometimes experience errors when multiple planets use qx32 at the same time. Please try again.
               </div>
             </>
           ) : (

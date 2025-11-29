@@ -3,6 +3,7 @@ import { Loader } from './components/Loader';
 import { ConsoleLog } from './components/ConsoleLog';
 import { ResultBadge } from './components/ResultBadge';
 import { hashStringToRange } from './utils/hash';
+import { isValidYesNoQuestion } from './utils/validation';
 
 const DEFAULT_STEPS = [
   "Initializing qx32 orbit cluster",
@@ -50,6 +51,7 @@ function App() {
   const [logs, setLogs] = useState<string[]>([]);
   const [result, setResult] = useState<ResultType | null>(null);
   const [steps, setSteps] = useState(DEFAULT_STEPS);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -61,13 +63,27 @@ function App() {
 
   const handleAsk = (e?: React.FormEvent) => {
     e?.preventDefault();
-    if (!input.trim()) return;
+    const trimmedInput = input.trim();
+    
+    if (!trimmedInput) return;
 
+    // Validate that it's a yes/no question
+    if (!isValidYesNoQuestion(trimmedInput)) {
+      setErrorMessage('QX32 only processes yes/no queries. Please try again.');
+      // Clear error message after 5 seconds
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 5000);
+      return;
+    }
+
+    // Clear any previous error
+    setErrorMessage(null);
     setLogs([]);
     setResult(null);
     
     // Easter egg check
-    if (input.toLowerCase().includes('antigravity')) {
+    if (trimmedInput.toLowerCase().includes('antigravity')) {
       setSteps(ANTIGRAVITY_STEPS);
     } else {
       setSteps(DEFAULT_STEPS);
@@ -109,6 +125,7 @@ function App() {
     setLogs([]);
     setResult(null);
     setInput('');
+    setErrorMessage(null);
   };
 
   return (
@@ -158,11 +175,23 @@ function App() {
                 <div className="mb-8 text-neon-dim font-mono text-sm opacity-80">
                   AWAITING INPUT QUERY...
                 </div>
+                {errorMessage && (
+                  <div className="mb-4 px-4 py-3 bg-red-500/10 border-2 border-red-500/50 text-red-400 font-mono text-sm text-center animate-pulse">
+                    <div className="font-bold text-red-500 mb-2 text-base tracking-wider">ERROR</div>
+                    <div className="leading-relaxed">{errorMessage}</div>
+                  </div>
+                )}
                 <form onSubmit={handleAsk} className="relative group">
                   <textarea
                     ref={inputRef}
                     value={input}
-                    onChange={(e) => setInput(e.target.value)}
+                    onChange={(e) => {
+                      setInput(e.target.value);
+                      // Clear error message when user starts typing
+                      if (errorMessage) {
+                        setErrorMessage(null);
+                      }
+                    }}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' && !e.shiftKey) {
                         e.preventDefault();
